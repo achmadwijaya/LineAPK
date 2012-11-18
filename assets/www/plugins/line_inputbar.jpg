@@ -1,0 +1,237 @@
+var LineInputBar = function() {
+};
+ 
+LineInputBar.ShowOption = {
+    EDIT_ONLY            : 0,              
+    ENABLE_ALLBUTTONS    : 1,
+    ENABLE_EMOJI_BUTTON  : 2, // Simle Button(이모티콘, 스티커, 액션스티커, 카오모지)을 노출한다.
+    ENABLE_ATTACH_BUTTON : 3  // Plus Button(카메라, 앨범, 위치선택)을 노출한다.
+};
+ 
+LineInputBar.KeyboardType = {
+    LINE_KEYBOARD       : 0,              
+    AVATARCHAT_KEYBOARD : 1
+};
+ 
+LineInputBar.ContentType = {
+    ContentTypeText    : 0,
+    ContentTypeImage   : 1,
+    ContentTypeSticker : 2,
+    ContentTypeActionSticker : 3,
+    ContentTypePresence: 4
+};
+ 
+LineInputBar.OperationType = {
+    OperationTypeResult    : 0,
+    OperationTypeRequest   : 1
+};
+ 
+LineInputBar.RequestType = {
+    RequestTypeObsInfo      : 0
+};
+ 
+/*
+ * show
+ *
+ * IN: show option
+ *     {
+ *           "keyboardType"     : 0:line keyboard, 1:avatar chatting keyboard. it has action sticker tab. (Number, default:LineInputBar.KeyboardType.LINE_KEYBOARD)
+ *           "showOption"       : 0:edit olny 1:enable sticker/emoticon, photo/location button (Number, default:       
+ *                                                             LineInputBar.ShowOption.ENABLE_ALLBUTTONS ( == 1)) , 
+ *           "cropSize"         : optional
+ *                              { width : width pixel (Number), height : height pixel (Number }
+ *           "saveCameraImageToAlbum" : optional (it works only iphone) true/false (Boolean)
+ *                                
+ *     }
+ *
+ * OUT:
+ *  void
+ *
+ *
+ */
+LineInputBar.prototype.show = function(args) {
+    Cordova.exec(null, null, "LineInputBar", "show", [args]);
+};
+/*
+ * registerCallback
+ *
+ * IN: void
+ *
+ * OUT: callback function
+ *      function declaration = function(event) 
+ *      
+ *      event object (JSON object)
+ *      {
+ *           "operationType"   : 0 = result, 1 = request (Number)
+ *           "result"          :
+ *                             {
+ *                                  "contentType"   : 0 = text, 1 = image, 7 = sticker (Number), 8 = location(presence), 9 = actionSticker
+ *                                  "content"       : json Content Data (JSON Object), contentType에 따라 데이터는 선택적으로 리턴됩니다.
+ *                                                  {
+ *                                                     text: Text data (String),
+ *                                                     sticker: 
+ *                                                     {
+ *                                                           packageID: Sticker Package ID (String)
+ *                                                           id: Sitcker ID (String),
+ *                                                     },
+ *                                                     image: 
+ *                                                     {
+ *                                                           "id"  : image obs id
+ *                                                           "url" : image obs url 
+ *                                                     },
+ *                                                     location: 
+ *                                                     {
+ *                                                          fullAddress         : full Address(String)
+ *                                                          latitude            : latitude(Number)
+ *                                                          longitude           : longitude(Number)
+ *                                                          streetAddress       : street name(String)
+ *                                                          city                : city name(String)
+ *                                                          region              : region name(String)
+ *                                                          phoneNumber         : phoneNumber(String)
+ *                                                          country             : country name(String)
+ *                                                          searchTerms         : searchTerms(String)
+ *                                                          fullAddressArray    : ["String1","String2",..."String3"](Array)
+ *                                                     },
+ *                                                     actionSticker:
+ *                                                     {
+ *                                                          packageID           : String,
+ *                                                          maleCode            : String,
+ *                                                          femaleCode          : String,
+ *                                                          animalCode          : String
+ *                                                     }
+ *
+ *                               },
+ *           "request"           : 
+ *                               {
+ *                                     "transID" : request transaction ID (String)  
+ *                                     "type"    : 0 = request object storage info (Number)
+ *                               },
+ *
+ *      }
+ *
+ *
+ */
+ 
+ 
+LineInputBar.prototype.registerCallback = function(callback) {
+    Cordova.exec(callback, null, "LineInputBar", "registerCallback", []);
+};
+ 
+/*
+ * requestToUpload
+ *
+ * IN: 
+ *     {
+ *           "transID"         : transaction ID (String), // registerCallback의 function으로 들어온 request.transID를 넘겨야 한다.
+ *           "serviceCode"     : service code ex) "myhome",
+ *           "objectSpaceID"   : space id ex) profile => "h", message => "m", myhome -> "h", 
+ *           "obsKey"          : object storage key (String)
+ *     }
+ *
+ * OUT: void
+ */
+LineInputBar.prototype.requestToUpload = function(args) {
+    Cordova.exec(null, null, "LineInputBar", "requestToUpload", [args]);
+};
+ 
+/*
+ * unregisterCallback
+ *
+ * IN: 
+ *  void
+ *
+ * OUT: 
+ *  void
+ *
+ *
+ */
+LineInputBar.prototype.unregisterCallback = function() {
+    Cordova.exec(null, null, "LineInputBar", "unregisterCallback", []);
+};
+ 
+/*
+ * hide
+ *
+ * IN:
+ *  callback
+ *
+ * OUT:
+ *  callback (no result data..)
+ *
+ *
+ */
+LineInputBar.prototype.hide = function(callback) {
+    Cordova.exec(callback, null, "LineInputBar", "hide", []);
+};
+ 
+/*
+ * showKeyboard
+ *     show keyboard in Channel View
+ *
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  void
+ *
+ *
+ */
+LineInputBar.prototype.showKeyboard = function() {
+    Cordova.exec(null, null, "LineInputBar", "showKeyboard", []);
+};
+ 
+ 
+/*
+ * hideKeyboard
+ *     hide keyboard in Channel View
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  void
+ *
+ *
+ */
+LineInputBar.prototype.hideKeyboard = function() {
+    Cordova.exec(null, null, "LineInputBar", "hideKeyboard", []);
+};
+ 
+/*
+ * poupUploadImageMenu
+ *
+ * IN: option
+ *     {
+ *           "cropSize"         : optional
+ *                              { width : width pixel (Number), height : height pixel (Number }
+ *           "saveCameraImageToAlbum" : optional (it works only iphone) true/false (Boolean)
+ *                                
+ *     }
+ *
+ * OUT: void
+ */
+LineInputBar.prototype.popupUploadImageMenu = function(options) {
+    Cordova.exec(null, null, "LineInputBar", "popupUploadImageMenu", [options]);
+};
+ 
+ 
+/*
+ * raiseInputEvent (for DEBUG purpose)
+ *
+ * IN:
+ *  raise text input event programmatically
+ *
+ * OUT:
+ *  void
+ *
+ *
+ */
+LineInputBar.prototype.raiseInputEvent = function(text) {
+    Cordova.exec(null, null, "LineInputBar", "raiseInputEvent", [text]);
+};
+ 
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+        window.plugins = {};
+ 
+    window.plugins.LineInputBar = new LineInputBar();
+});

@@ -1,0 +1,57 @@
+
+/**
+ * Line Authentication Instance plugin
+ * Author: snaiper
+ *
+ */
+  
+var LineAuthentication = function() {
+};
+ 
+/*
+ * Get Session Info 
+ *
+ * IN:
+ *    void
+ *
+ * OUT:
+ *     {
+ *           "id"            : MID (String),
+ *           "userId"        : 공개 사용자 ID (String), 
+ *           "displayName"   : 사용자의 이름 (String),
+ *           "phoneNumber"   : 사용자의 전화번호 (String),
+ *           "statusMessage" : 상태 메시지 (String),
+ *           "allowSearch"   : ID 검색 허용, 0 / 1 (Number),
+ *           "pictureUrl"    : Picture URL (String),
+ *           "QRCodeImage"   : QR Code image (String, base64 format, data:image/png;base64,ABCD....)
+ *           "appVersion"    : 앱의 버전 (String)
+ *           "appPhase"      : 앱의 현재 Phase, 릴리즈 버전에는 노출하지 않음 ex) alpha, beta, rc (String)
+ *     }
+ *
+ *
+ */
+LineAuthentication.prototype.getSessionInfo = function(success, fail) {
+    Cordova.exec(success, fail, "LineAuthentication", "getSessionInfo", []);
+};
+ 
+/*
+ * Get Access Token
+ *
+ * IN:
+ *  channelId (String) : 채널 ID
+ *
+ * OUT:
+ *  access token (String) : 채널 인증 토큰
+ *
+ *
+ */
+LineAuthentication.prototype.getAccessToken = function(channelId, success, fail) {
+    Cordova.exec(success, fail, "LineAuthentication", "getAccessToken", [channelId]);
+};
+      
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+          
+    window.plugins.LineAuthentication = new LineAuthentication();
+});

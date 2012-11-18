@@ -1,0 +1,128 @@
+
+var LineNativeUI = function() {
+};
+ 
+LineNativeUI.resultChangeProfileImage = {
+    Success     : 0,              
+    Fail        : 1,
+    Cancel      : 2
+};
+ 
+/*
+ * Show User's Profile UI on Channel View 
+ *
+ * IN:
+ *     arguments[0] => mid / User's MID, 화면에 띄울 User의 MID (String)
+ *
+ * OUT:
+ *     void
+ *
+ *
+ */
+LineNativeUI.prototype.showProfile = function(mid) {
+    Cordova.exec(null, null, "LineNativeUI", "showProfile", [mid]);
+};
+ 
+ 
+/*
+ * openDetailMap
+ *      open map viewer, with geo location infomation.
+ *
+ * IN: 
+ *     {
+ *           "title"       : navigation bar title(String)
+ *           "address"     : address(String)
+ *           "latitude"    : latitude(Number)
+ *           "longitude"   : longitude(Number)
+ *     }
+ *
+ * OUT:
+ *  void
+ *
+ *
+ */
+LineNativeUI.prototype.openDetailMap = function(options) {
+    Cordova.exec(null, null, "LineNativeUI", "openDetailMap", [options]);
+};
+ 
+ 
+/*
+ * changeLineProfileImage
+ *
+ * IN: void
+ *
+ * OUT: callback
+ *     {
+ *           "status"       : LineNativeUI.resultChangeProfileImage value (Number)
+ *     }
+ *
+ */
+LineNativeUI.prototype.changeLineProfileImage = function(cb) {
+   Cordova.exec(cb, null, "LineNativeUI", "changeLineProfileImage", []);
+}
+ 
+/*
+ * setAvatarTabVisibility
+ *              아바타 하단탭을 보이거나 감추게 한다.
+ *
+ * IN: 
+ *     options
+ *            boolean  (true : show, false : hide)
+ *
+ */
+LineNativeUI.prototype.setAvatarTabVisibility = function(options) {
+   Cordova.exec(null, null, "LineNativeUI", "setAvatarTabVisibility", [options]);
+}
+ 
+/*
+ * setAvatarTabHighlighted
+ *              아바타 하단탭에서 특정 인덱스의 탭을 highlight 시킨다. (아바타 탭이 있는 화면에서만 동작)
+ *
+ * IN: 
+ *     options
+ *            number  (index value)
+ *
+ */
+LineNativeUI.prototype.setAvatarTabHighlighted = function(options) {
+    Cordova.exec(null, null, "LineNativeUI", "setAvatarTabHighlighted", [options]);
+}
+ 
+/*
+ * showDatePicker (only android)
+ *
+ * IN: 
+ *     options
+ *            string  (YYYY-MM-DD 형식 // date가 없거나 잘못된 포맷이라면 오늘 날짜를 띄운다.)
+ *
+ * OUT: callback
+ *            string  (YYYY-MM-DD) // 선택을 취소하면 빈값이 내려간다.
+ *
+ */
+LineNativeUI.prototype.showDatePicker = function(cb, options) {
+   Cordova.exec(cb, null, "LineNativeUI", "showDatePicker", [options]);
+}
+ 
+/*
+ * showErrorView 
+ *
+ * IN: 
+ *     retry_url : 다시시도할 url, null이면 현재 페이지를 다시 로드 함
+ */
+LineNativeUI.prototype.showErrorView = function(retry_url) {
+   Cordova.exec(null, null, "LineNativeUI", "showErrorView", [retry_url]);
+}
+ 
+LineNativeUI.prototype.showWriteView = function(opt, eventCallback) {
+	Cordova.exec(eventCallback, null, "LineNativeUI", "showWriteView", [opt]);
+}
+
+LineNativeUI.prototype.showVideoPlayer = function(opt) {
+	Cordova.exec(null, null, "LineNativeUI", "showVideoPlayer", [opt]);
+}
+
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+          
+    window.plugins.LineNativeUI = new LineNativeUI();
+});

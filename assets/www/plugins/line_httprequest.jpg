@@ -1,0 +1,46 @@
+
+/**
+ * Request External URL HTTP
+ *
+ * http://appspresso.com/api/extension/symbols/ax.ext.net.CurlOpts.html#encoding 참고
+ */
+ 
+var HttpRequest = function() {
+};
+  
+/* HttpRequest curl
+ *
+ * IN:
+ *  Dictionary Type
+ *  
+ *  { 
+ *    url       : string / 요청 url (required)
+ *    method    : string / GET, POST, PUT, DELETE default = GET
+ *    headers   : JSONObject / Http Header 예) {'Content-Type': 'application/x-www-form-urlencoded'}
+ *    params    : JSONObject / request 파라미터 예) {'param1':'param1 value', 'param2': 'param2 value', 'param3': 'param3 value'}
+ *    encoding  : string / request 인코딩 default = UTF-8
+ *  }
+   
+ * OUT:
+ *  Response Object(Response is dictionary type)
+ *  {
+ *      "responseCode" : HttpResponse Code
+ *      "response"  : HttpResponse 문자열
+ *  }
+ *
+ *  Error Object
+ *  {
+ *      "code" : Error Code
+ *      "description" : Error Description
+ *  }
+ */
+HttpRequest.prototype.curl = function(options, success, fail) {
+    Cordova.exec(success, fail, "LineHttpRequest", "curl", [options]);
+};
+    
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+    
+    window.plugins.HttpRequest = new HttpRequest();
+});

@@ -1,0 +1,221 @@
+
+//
+//  ChannelBrowser.js
+//  Line
+//
+//  Created by ijoa on 2/14/12.
+//  Copyright (c) 2012 NHN Japan. All rights reserved.
+//  
+ 
+ 
+var ChannelBrowser = function() {
+    
+};
+ 
+ 
+ChannelBrowser.ViewAppearType = {
+    PUSH  : "0",              
+    MODAL : "1",
+};
+ 
+ChannelBrowser.OrientationType = {
+    ORIENT_NONE     : "0", 
+    PORTRAIT_UP     : "1",              
+    LANDSCAPE_LEFT  : "2",
+    LANDSCAPE_RIGHT : "3"
+};
+ 
+ChannelBrowser.AppearAnimationType = {
+    ANIMATION_NO   : false,              
+    ANIMATION_YES  : true
+};
+ 
+ChannelBrowser.StatusBar = {
+    HIDE : false,              
+    SHOW : true
+};
+ 
+ChannelBrowser.ShakeSensitivity = {
+    LOW     : "0",              
+    MIDDLE  : "1",
+    HIGH    : "2"
+};
+ 
+ 
+/*
+ * openWebPage()
+ *
+ * IN: 
+ * options: Dictionary Type
+ * { 
+ *    appear    : ViewAppearType
+ *    orient    : OrientationType,      default is ORIENT_NONE
+ *    animation : AppearAnimationType,  default is ANIMATION_YES
+ *    statusbar : statusbar,            default is SHOW
+ *    url       : destination url 
+ * }
+ *
+ * OUT:
+ *  void
+ */
+ 
+ChannelBrowser.prototype.openWebPage = function(options)
+{
+    Cordova.exec(null, null, "ChannelBrowser", "openBrowser", [options]);
+};
+ 
+ 
+/*
+ * closeWebPage()
+ *
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  void
+ */
+ 
+ChannelBrowser.prototype.closeWebPage = function()
+{
+    Cordova.exec(null, null, "ChannelBrowser", "closeBrowser", []);
+};
+ 
+ 
+/*
+ * rotateBrowser()
+ *
+ * IN: 
+ * options: Dictionary Type
+ * { 
+ *    orient    : OrientationType,      default is ORIENT_PORTRAIT_UP
+ *    animation : AppearAnimationType,  default is ANIMATION_YES
+ * }
+ *
+ * OUT:
+ *  void
+ */
+ 
+ChannelBrowser.prototype.rotateBrowser = function(options)
+{
+    Cordova.exec(null, null, "ChannelBrowser", "rotateBrowser", [options]);
+};
+ 
+ 
+/*
+ * showStatusBar()
+ * show StatusBar current page
+ * 
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  void
+ */
+ 
+ChannelBrowser.prototype.showStatusBar = function()
+{
+    Cordova.exec(null, null, "ChannelBrowser", "showStatusBar", []);
+};
+ 
+ 
+/*
+ * hideStatusBar()
+ * hide StatusBar current page
+ *
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  void
+ */
+ChannelBrowser.prototype.hideStatusBar = function()
+{
+    Cordova.exec(null, null, "ChannelBrowser", "hideStatusBar", []);
+};
+ 
+/*
+ * watchShaking()
+ *
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  callback : hasn't return parameter
+ */
+ 
+ChannelBrowser.prototype.watchShaking = function(callback)
+{
+    Cordova.exec(callback, null, "ChannelBrowser", "watchShaking", []);
+}
+ 
+ 
+/*
+ * unwatchShaking()
+ *
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  void
+ */
+ 
+ChannelBrowser.prototype.unwatchShaking = function()
+{
+    Cordova.exec(null, null, "ChannelBrowser", "unwatchShaking", []);
+}
+ 
+/*
+ * setBrowserSize() (only android)
+ *
+ * IN: 
+ * options: Dictionary Type
+ * { 
+ *    width  : width in pixel (number),   if (width > diviceWidth) width = diviceWidth
+ *    height : height in pixel (number),  if (height > diviceHeight) width = diviceHeight
+ * }
+ *
+ * OUT:
+ *  void
+ */
+ChannelBrowser.prototype.setBrowserSize = function(options)
+{
+    Cordova.exec(null, null, "ChannelBrowser", "setBrowserSize", [options]);
+}
+ 
+/*
+ * watchSizeChanged()
+ *
+ * IN:
+ *  callback : {width:int, height:int}
+ *
+ * OUT:
+ *  
+ */
+ChannelBrowser.prototype.watchSizeChanged = function(callback)
+{
+    Cordova.exec(callback, null, "ChannelBrowser", "watchSizeChanged", []);
+}
+ 
+/*
+ * unwatchSizeChanged()
+ *
+ * IN:
+ *  
+ *
+ * OUT:
+ *  
+ */
+ChannelBrowser.prototype.unwatchSizeChanged = function()
+{
+    Cordova.exec(null, null, "ChannelBrowser", "unwatchSizeChanged", []);
+}
+ 
+Cordova.addConstructor(function() 
+{
+    if (!window.plugins)
+    {
+        window.plugins = {};
+    }
+     
+    window.plugins.ChannelBrowser = new ChannelBrowser();
+});

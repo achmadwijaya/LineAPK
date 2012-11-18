@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Line HttpRequest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<meta charset="utf-8">
+<link rel="StyleSheet" type="text/css" href="style.css" />
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_httprequest.js"></script>
+
+<!--style>
+table           {width:100%; border:solid 1px red; table-layout:fixed;}
+table td        {border:solid 1px green;}
+.fixedcell      {width:75px;}
+.fluidcell      {width:auto; overflow:hidden; white-space:nowrap;}
+</style-->
+
+<script type="text/javascript" charset="utf-8">
+
+document.addEventListener('deviceready', function() {
+   var btn1 = document.getElementById("page_404_btn");
+   btn1.onclick = function() {
+   		var jsonObject = {url:"http://m.naver.com/test.html"};
+   		
+	    window.plugins.HttpRequest.curl(jsonObject,
+			function(r){
+				alert(r.responseCode);
+				document.getElementById("page_404").innerHTML=r.response;
+			},
+			function(e){console.log(e)}
+		);
+   }
+   btn1.disabled=false;
+    
+   var btn2 = document.getElementById("get_normal_btn");
+   btn2.onclick = function() {
+   		var jsonObject = {url:"http://m.naver.com/"};
+   		
+	    window.plugins.HttpRequest.curl(jsonObject,
+			function(r){
+				alert(r.responseCode);
+				document.getElementById("get_normal").innerHTML=r.response;
+			},
+			function(e){console.log(e)}
+		);
+    }
+    btn2.disabled=false;
+    
+   var btn3 = document.getElementById("get_query_url_btn");
+   btn3.onclick = function() {
+   		var jsonObject = {
+   			url:"http://m.search.com/search.naver",
+   			params:{where:"m", sm:"mtp_lve", query:"기아자동차 생산직 채용"}
+   		};
+   		
+	    window.plugins.HttpRequest.curl(jsonObject,
+			function(r){
+				alert(r.responseCode);
+				document.getElementById("get_query_url").innerHTML=r.response;
+			},
+			function(e){console.log(e)}
+		);
+    }
+    btn3.disabled=false;
+    
+   var btn4 = document.getElementById("post_url_btn");
+   btn4.onclick = function() {
+   		var jsonObject = {
+   			method:"post",
+   			url:"http://rpm9.com/news/articleList.html",
+   			params:{sc_area:"m", view_type:"sm", sc_word:"쏘나타"}
+   			};
+   		
+	    window.plugins.HttpRequest.curl(jsonObject,
+			function(r){
+				alert(r.responseCode);
+				document.getElementById("post_url").innerHTML=r.response;
+			},
+			function(e){console.log(e)}
+		);
+    }
+    btn4.disabled=false;
+    
+   var btn5 = document.getElementById("get_url_image_btn");
+   btn5.onclick = function() {
+   		var jsonObject = {
+   			method:"get",
+   			url:"http://static.naver.net/www/u/2010/0611/nmms_215646753.gif"
+   			};
+   		
+	    window.plugins.HttpRequest.curl(jsonObject,
+			function(r){
+				alert(r.responseCode);
+				document.getElementById("get_url_image").innerHTML=r.response;
+			},
+			function(e){console.log(e)}
+		);
+    }
+    btn5.disabled=false;
+    
+   
+    
+  }, true);
+
+</script>
+
+</head>
+<body id="body">
+   <div data-role="page">
+      <div data-role="content">
+         <p><input disabled id="page_404_btn" type="button" value="Not found url"  /></p>
+         <p id="page_404">Loading page1..</p>
+         <p><input disabled id="get_normal_btn" type="button" value="Get normal"  /></p>
+         <p id="get_normal">Loading page2...</p>
+         <p><input disabled id="get_query_url_btn" type="button" value="Get query url"  /></p>
+         <p id="get_query_url">Loading page3...</p>
+         <p><input disabled id="post_url_btn" type="button" value="Post url"  /> This page has invalid link. Just For Test</p>
+         <p id="post_url">Loading page4...</p>
+         <p><input disabled id="get_url_image_btn" type="button" value="Get url Image"  /></p>
+         <p id="get_url_image">Loading page5...</p>
+       </div>
+   </div>
+</body>
+</html>

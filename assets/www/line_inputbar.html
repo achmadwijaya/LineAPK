@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Line Friends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<meta charset="utf-8">
+<link rel="StyleSheet" type="text/css" href="style.css" />
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_inputbar.js"></script>
+
+<!--style>
+table           {width:100%; border:solid 1px red; table-layout:fixed;}
+table td        {border:solid 1px green;}
+.fixedcell      {width:75px;}
+.fluidcell      {width:auto; overflow:hidden; white-space:nowrap;}
+</style-->
+
+<script type="text/javascript" charset="utf-8">
+
+    var elementCount = 0;
+    var arrayCount = 0;
+    var objectCount = 0;
+    var nestingLevel = 0;
+
+	function onBodyLoad()
+	{	
+	   document.addEventListener("deviceready", onDeviceReady, false);
+	   document.getElementById("showInputBar").addEventListener("click", showInputBar, false);
+	   document.getElementById("hideInputBar").addEventListener("click", hideInputBar, false);
+	   document.getElementById("showKeyboard").addEventListener("click", showKeyboard, false);
+	   document.getElementById("hideKeyboard").addEventListener("click", hideKeyboard, false);
+	   document.getElementById("popupUploadImageMenu").addEventListener("click", popupUploadImageMenu, false);
+	   document.getElementById("showAvatarInputBar").addEventListener("click", showAvatarInputBar, false);
+	   
+	   
+	}
+	
+	function setText(result)
+	{
+		var element = document.getElementById('TextFromInputBar');
+	    element.innerHTML += result;
+	}
+	
+	function setImage(url) {
+		
+		var element = document.getElementById('test_img');
+		alert(element.src);
+		element.src = url;
+		alert(element.src);
+	
+	}
+	
+	
+	function showInputBar() {
+		window.plugins.LineInputBar.show({showOption: LineInputBar.ShowOption.ENABLE_ALLBUTTONS});
+        window.plugins.LineInputBar.registerCallback(inputBarEventCallback);
+	}
+
+	function showAvatarInputBar() {
+		window.plugins.LineInputBar.show({showOption: LineInputBar.ShowOption.ENABLE_EMOJI_BUTTON, keyboardType:1, editMaxLen:10});
+        window.plugins.LineInputBar.registerCallback(inputBarEventCallback);
+	}
+	
+	function hideInputBar() {
+		window.plugins.LineInputBar.hide(hideInputBarCallback);
+	}
+	
+	function hideInputBarCallback() {
+		alert("hide inputbar");
+	}
+	
+	function showKeyboard() {
+		window.plugins.LineInputBar.showKeyboard();
+	}
+	
+	function hideKeyboard() {
+		window.plugins.LineInputBar.hideKeyboard();
+	}
+	
+	function popupUploadImageMenu() {
+		window.plugins.LineInputBar.popupUploadImageMenu({ cropSize : { width : 400, height : 200} });
+		window.plugins.LineInputBar.registerCallback(inputBarEventCallback);
+	}
+	
+	
+  function inputBarEventCallback(eventObject) 
+    {
+             switch(eventObject.operationType) 
+             {
+                case LineInputBar.OperationType.OperationTypeResult:
+           		switch (eventObject.result.contentType)
+           		{
+            		case LineInputBar.ContentType.ContentTypeText:
+                		setText(eventObject.result.content.text);
+                		break;
+                    case LineInputBar.ContentType.ContentTypeSticker:
+                    	setText(eventObject.result.content.sticker.id);
+                        break;
+                    case LineInputBar.ContentType.ContentTypeImage:
+                    	setText(eventObject.result.content.image.downloadUrl);
+                    	setImage(eventObject.result.content.image.downloadUrl);
+                        break;
+                    case LineInputBar.ContentType.ContentTypePresence:
+                    	setText("(" + eventObject.result.content.location.latitude + ", " + eventObject.result.content.location.longitude + ")");
+                    	setText(eventObject.result.content.location.fullAddress + " : " + eventObject.result.content.location.region);
+                        break;
+                    case LineInputBar.ContentType.ContentTypeActionSticker:
+                    	setText("[packageId: " + eventObject.result.content.actionSticker.packageID + ", " + 
+                    			"maleCode: " + eventObject.result.content.actionSticker.maleCode + ", " + 
+                    			"femaleCode: " + eventObject.result.content.actionSticker.femaleCode + ", " + 
+                    			"animalCode: " + eventObject.result.content.actionSticker.animalCode + "]")
+                    	break;
+            		default:
+                		break;
+           		}
+                break;
+                case LineInputBar.OperationType.OperationTypeRequest:
+                {
+                   //if (eventObject.request.type == LineInputBar.RequestType.RequestTypeObsKey)
+                   //{
+                         // server에서 obs key를 얻는다.
+                         //var key = getObsKey();
+                         alert("getting obs key");
+                         alert("transID : " + eventObject.request.transID);
+                         window.plugins.LineInputBar.requestToUpload({transID : eventObject.request.transID, obsKey : "1234567889", serviceCode: "myhome", objectSpaceID : "h"});
+                         //window.plugins.LineInputBar.requestToUpload({transID : eventObject.request.transID, obsKey : "1234567889", serviceCode: "talk", objectSpaceID : "m"});
+                   //}
+                }
+                break;
+             }
+    }
+	
+    function onDeviceReady()
+	{
+//		alert(LineDeviceInfo.language + " : " + LineDeviceInfo.timezone);
+	}
+	
+    
+</script>
+
+</head>
+<body id="body" onload="onBodyLoad()">
+   <input type="button" id="showInputBar" value="Show InputBar"/>
+   <input type="button" id="hideInputBar" value="Hide InputBar"/>
+   <input type="button" id="showKeyboard" value="Show Keyboard"/>
+   <input type="button" id="hideKeyboard" value="Hide Keyboard"/>
+   <input type="button" id="popupUploadImageMenu" value="popupUploadImageMenu crop 400x200"/>
+   <input type="button" id="showAvatarInputBar" value="Show Avatar InputBar"/>
+   <div data-role="page">
+      <div data-role="content">
+         <p>Line Text From InputBar</p>
+         <p id="TextFromInputBar"></p>
+         <img id="test_img" src="" width="285" height="381" />
+      </div>
+   </div>
+</body>
+</html>

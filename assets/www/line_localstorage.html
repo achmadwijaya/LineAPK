@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Line Friends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<meta charset="utf-8">
+<link rel="StyleSheet" type="text/css" href="style.css" />
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_localstorage.js"></script>
+
+<!--style>
+table           {width:100%; border:solid 1px red; table-layout:fixed;}
+table td        {border:solid 1px green;}
+.fixedcell      {width:75px;}
+.fluidcell      {width:auto; overflow:hidden; white-space:nowrap;}
+</style-->
+
+<script type="text/javascript" charset="utf-8">
+
+    var elementCount = 0;
+    var arrayCount = 0;
+    var objectCount = 0;
+    var nestingLevel = 0;
+
+	function onBodyLoad()
+	{	
+	   document.addEventListener("deviceready", onDeviceReady, false);
+	   document.getElementById("setItem").addEventListener("click", setItem, false);
+	   document.getElementById("setItems").addEventListener("click", setItems, false);
+	   document.getElementById("getItem").addEventListener("click", getItem, false);
+	   document.getElementById("removeItem").addEventListener("click", removeItem, false);
+	   document.getElementById("existsItem").addEventListener("click", existsItem, false);
+	   document.getElementById("clearItems").addEventListener("click", clearItems, false);
+	   document.getElementById("localstorageTest").addEventListener("click", localstorageTest, false);
+	   document.getElementById("localstorageTest2").addEventListener("click", localstorageTest2, false);
+	   document.getElementById("localstorageTest3").addEventListener("click", localstorageTest3, false);
+	}
+	
+	function localstorageTest() {
+	
+		var nSetStartTime, nGetStartTime;
+		var sChunk1 = new Array(Math.floor(1000*1024)).join('x');
+		
+		alert("call localstorage");
+/*		
+		nSetStartTime = new Date();
+		var result = LineLocalStorage2.setItems(JSON.stringify([{
+		     "key" : "chunk1", 
+		     "value" : sChunk1 
+		}]));
+		var nCurTime = new Date();
+		document.getElementById("result_keys").innerHTML += "setItem = " + (nCurTime - nSetStartTime) + " : " + result + "<br>";
+		
+		nGetStartTime = new Date();
+		var value = LineLocalStorage2.getItems(JSON.stringify(["chunk1"]));
+		var nCurTime2 = new Date();
+		document.getElementById("result_keys").innerHTML += "getItem = " + (nCurTime2 - nGetStartTime) + " : " + value + "<br>";
+*/		
+/*		
+		nSetStartTime = new Date();
+		window.localStorage.setItem("chunk1", sChunk1);
+		var nCurTime = new Date();
+		document.getElementById("result_keys").innerHTML += "setItem = " + (nCurTime - nSetStartTime) + "<br>";
+		
+		nGetStartTime = new Date();
+		var value = window.localStorage.getItem("chunk1");
+		var nCurTime2 = new Date();
+		document.getElementById("result_keys").innerHTML += "getItem = " + (nCurTime2 - nGetStartTime) + " + value<br>";
+		alert(value);
+*/		
+
+
+		nSetStartTime = new Date();
+		window.plugins.LineLocalStorage.setItems([{
+		     "key" : "chunk1", 
+		     "value" : sChunk1 
+		}], function(oEvent){
+		     var nCurTime = new Date();
+		     document.getElementById("result_keys").innerHTML += "1 setItem = " + (nCurTime - nSetStartTime) + "<br>";
+		     //alert("end call localstorage");
+		
+		     var nGetStartTime2 = new Date();
+		     window.plugins.LineLocalStorage.getItems(["chunk1"], function(oEvent) {
+		          var nCurTime2 = new Date();
+		          document.getElementById("result_keys").innerHTML += "1 getItem = " + (nCurTime2 - nGetStartTime2) + "<br>";
+		          //alert(oEvent);
+		     });
+		 
+		});
+		
+	}
+	
+	function localstorageTest2() {
+	
+		var nSetStartTime, nGetStartTime;
+		var sChunk1 = new Array(Math.floor(1000*1024)).join('x');
+		
+		alert("call localstorage");
+		
+		nSetStartTime = new Date();
+		var result = LineAndroidLocalStorage.setItems(JSON.stringify([{
+		     "key" : "chunk1", 
+		     "value" : sChunk1 
+		}]));
+		var nCurTime = new Date();
+		document.getElementById("result_keys").innerHTML += "2 setItem = " + (nCurTime - nSetStartTime) + " : " + result + "<br>";
+		
+		nGetStartTime = new Date();
+		//var value = LineAndroidLocalStorage.getItems(JSON.stringify(["chunk1"]));
+		var value = LineAndroidLocalStorage.getItem("chunk1");
+		var nCurTime2 = new Date();
+		//var json = JSON.parse(value);
+		//json.data[0].value
+		document.getElementById("result_keys").innerHTML += "2 getItem = " + (nCurTime2 - nGetStartTime) + "<br>";
+	}
+	
+	function localstorageTest3() {
+	
+		var nSetStartTime, nGetStartTime;
+		var sChunk1 = new Array(Math.floor(1000*1024)).join('x');
+		
+		alert("call localstorage");
+		
+		nSetStartTime = new Date();
+		window.localStorage.setItem("chunk1", sChunk1);
+		var nCurTime = new Date();
+		document.getElementById("result_keys").innerHTML += "3 setItem = " + (nCurTime - nSetStartTime) + "<br>";
+		
+		nGetStartTime = new Date();
+		var value = window.localStorage.getItem("chunk1");
+		var nCurTime2 = new Date();
+		document.getElementById("result_keys").innerHTML += "3 getItem = " + (nCurTime2 - nGetStartTime) + "<br>";
+	}
+	
+	function callbackResult(eventObject) 
+    {
+           if (eventObject.result == LineLocalStorage.Result.SUCCESS) {
+                alert("success");
+               	window.plugins.LineLocalStorage.keys(keyResult);
+           } else {
+                alert("fail");
+           }
+    }
+    
+	function getItemResult(eventObject) 
+    {
+           if (eventObject.result == LineLocalStorage.Result.SUCCESS) {
+               	alert("success data : " + eventObject.data[0].value);
+           } else {
+                alert("fail");
+           }
+    }
+    
+    
+    function keyResult(eventObject) {
+    	if (eventObject.result == LineLocalStorage.Result.SUCCESS) {
+    		if (eventObject.data != null) {
+    			window.plugins.LineLocalStorage.getItems(eventObject.data, getItemsResult);
+    		} else {
+    			alert("empty keys");
+    			element.innerHTML = "empty keys";
+    		}
+    	} else {
+    		element.innerHTML = "fail";
+            alert("fail");
+        }
+    }
+
+    function getItemsResult(eventObject) {
+    	if (eventObject.result == LineLocalStorage.Result.SUCCESS) {
+    		var element = document.getElementById('result_keys');
+    		element.innerHTML = parse(eventObject.data);
+    	} else {
+            alert("fail");
+        }
+    }
+    
+    function existItemResult(eventObject) {
+    	if (eventObject.result == LineLocalStorage.Result.SUCCESS) {
+    		alert("success exist : " + eventObject.exist);
+    	} else {
+            alert("fail");
+        }
+    }
+
+	function setItem() {
+		window.plugins.LineLocalStorage.setItem(document.getElementById("key").value, document.getElementById("value").value, callbackResult);
+	}
+	function setItems() {
+	
+		window.plugins.LineLocalStorage.setItems([
+			{"key" : document.getElementById("key").value, "value" : document.getElementById("value").value}, 
+			{"key" : document.getElementById("key1").value, "value" : document.getElementById("value1").value}, 
+			{"key" : document.getElementById("key2").value, "value" : document.getElementById("value2").value}], callbackResult);
+	}
+	
+	function getItem() {
+		window.plugins.LineLocalStorage.getItem(document.getElementById("key").value, getItemResult);
+	}
+	
+	function removeItem() {
+		window.plugins.LineLocalStorage.removeItem(document.getElementById("key").value, callbackResult);
+	}
+	
+	function existsItem() {
+		window.plugins.LineLocalStorage.existsItem(document.getElementById("key").value, existItemResult);
+	}
+	
+	function clearItems() {
+		window.plugins.LineLocalStorage.clearItems(callbackResult);
+	}
+	
+    function onDeviceReady()
+	{
+		//window.plugins.LineLocalStorage.keys(keyResult);
+	}
+	
+	function wordwrap(str)
+	{
+	   parts = str.split(" ");
+	
+	   for(i = 0; i < parts.length; i++)
+	   {
+		  if(parts[i].length <= 5) continue;
+	
+		  t = parts[i].length;
+		  p = "";
+	
+		  for(var j = 0; j < (parts[i].length - 5); j += 5) p += parts[i].substring(j, j + 5) + "<wbr />";
+		  parts[i] = p + parts[i].substring(j, parts[i].length);
+	   }
+	
+	   return parts.join(" ");
+	}
+    
+    function parseValue(val, parent, level)
+	{
+	   elementCount++;
+	   if(parent == null) parent = "";
+	   if(level == null) level = 1;
+	
+	   if(typeof(val) == "object")
+	   {
+		  if(level > nestingLevel) nestingLevel = level;
+		  if(val instanceof Array)
+		  {
+			 arrayCount++;
+			 parent = parent + (parent != "" ? " > " : "") + "Array (" + val.length + " item" + (val.length != 1 ? "s)" : ")");
+	
+			 var out = "<div class='wrap'>\n<div class='array'>\n<div class='widgets'></div>\n<h3><span class='titled' title='" + parent + "'>Array</span></h3>\n";
+	
+			 if(val.length > 0)
+			 {
+				out += "<table class='arraytable'>\n<tr><th>Idx</th><th>Val</th></tr>\n";
+				
+				for(prop in val)
+				{
+				   if(typeof(val[prop]) == "function") continue;
+				   out += "<tr><td>" + prop + "</td><td>" + parseValue(val[prop], parent, level + 1) + "</td></tr>\n";
+				}
+				
+				out += "</table>\n";
+			 }
+			 else
+			 {
+				
+				return "(empty <span class='titled' title='" + parent + "'>Array</span>)\n";
+			 }
+			 
+			 out += "</div>\n</div>\n";
+			 return out;
+		  }
+		  else
+		  {
+			 objectCount++;
+			 i = 0;
+			 for(prop in val)
+			 {
+				if(typeof(val[prop]) != "function") i++;
+			 }
+	
+			 parent = parent + (parent != "" ? " > " : "") + "Object (" + i + " item" + (i != 1 ? "s)" : ")");
+	
+			 var out = "<div class='wrap'>\n<div class='object'>\n<div class='widgets'></div>\n<h3><span class='titled' title='" + parent + "'>Object</span></h3>\n";
+			 
+			 if(i > 0)
+			 {
+				out += "<table class='objecttable'>\n<tr><th>Name</th><th>Value</th></tr>\n";
+				for(prop in val)
+				{
+				   if(typeof(val[prop]) == "function") continue;
+				   out += "<tr><td>" + prop + "</td><td>" + parseValue(val[prop], parent, level + 1) + "</td></tr>\n";
+				}
+				
+				out += "</table><div class='clear'></div>\n";
+			 }
+			 else
+			 {
+				return "(empty <span class='titled' title='" + parent + "'>Object</span>)\n";
+			 }
+			 
+			 out += "</div>\n</div>\n";
+			 return out;
+		  }
+	   }
+	   else
+	   {
+		  if(typeof(val) == "string") return "<span class='string'>" + wordwrap(val.replace(/\n/g, "<br />")) + "</span>";
+		  else if(typeof(val) == "number") return "<span class='number'>" + val + "</span>";
+		  else if(typeof(val) == "boolean") return "<span class='boolean'>" + val + "</span>";
+		  else return "<span class='void'>(null)</span>";
+	   }
+	}
+    
+    function parse(str)
+    {
+	   elementCount = 0;
+	   arrayCount = 0;
+	   objectCount = 0;
+
+	   var obj = null;
+	   try
+	   {
+	      // alert(str);
+		  obj = typeof str != 'object' ? JSON.parse(str) : str;
+		  //alert(obj);
+	   }
+	   catch(e)
+	   {
+		  if(e instanceof SyntaxError)
+		  {
+			 alert("There was a syntax error in your JSON string.\n" + e.message + "\nPlease check your syntax and try again.");
+			 return;
+		  }
+	
+	      alert(e);
+		  alert("There was an unknown error. Perhaps the JSON string contained a deep level of nesting.");
+		  return;
+	   }
+	
+	   return parseValue(obj, null, null);
+    }
+	
+    
+</script>
+
+</head>
+<body id="body" onload="onBodyLoad()">
+   <input type="text" id="key" value="key"/>
+   <input type="text" id="value" value="value"/>
+   </br>
+   <input type="text" id="key1" value="key1"/>
+   <input type="text" id="value1" value="value1"/>
+   </br>
+   <input type="text" id="key2" value="key2"/>
+   <input type="text" id="value2" value="value2"/>
+   </br>
+   </br>
+   <input type="button" id="setItem" value="setItem(1st box)"/>
+   <input type="button" id="setItems" value="setItems"/>
+   <input type="button" id="getItem" value="getItem(1st box)"/>
+   <input type="button" id="removeItem" value="removeItem(1st box)"/>
+   <input type="button" id="existsItem" value="existsItem(1st box)"/>
+   <input type="button" id="clearItems" value="clearItems"/>
+   <input type="button" id="localstorageTest" value="localstorageTest"/>
+   <input type="button" id="localstorageTest2" value="localstorageTest2"/>
+   <input type="button" id="localstorageTest3" value="localstorageTest3"/>
+   <p>local storage result</p>
+   <p id="result_keys"></p>
+   
+   
+</body>
+</html>

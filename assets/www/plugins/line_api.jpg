@@ -1,0 +1,89 @@
+
+var LineApi = function() {
+};
+ 
+LineApi.Result = {
+    SUCCESS      : 0 ,
+    FAIL         : -1
+};
+ 
+/*
+ * Send a text message to users(MIDs)
+ *
+ * IN:
+ *     arguments[0]
+ *     { 
+ *         "transId"     : number      // transction id
+ *         "mids"        : array list, // mid list 
+ *         "text"        : string      // 보낼 메시지 내용
+ *         "group"       : boolean     // mids가 2명 이상일 경우 그룹으로 보낼지 여부, default : false
+ *     }
+ *
+ *     result => 메시지 전송 결과를 받는 result function
+ *
+ * OUT: result function
+ *      function declaration = function(event) 
+ *      
+ *      event object (JSON object)
+ *      {
+ *           "transId"  : number  // transction id
+ *           "result"   : 0 = success, etc = error (Number) 
+ *      }
+ *
+ */
+LineApi.prototype.sendTextMessage = function(args, result) {
+    Cordova.exec(result, null, "LineApi", "sendTextMessage", [args]);
+};
+ 
+ 
+LineApi.SaveStatus = {
+   START : 0,
+   PROGRESS : 1,
+   COMPLETE : 2,
+   FAIL : 3
+};
+ 
+/*
+ * saveImageToAlbum : Download image and save to album
+ *
+ * IN:
+ *     arguments[0]
+ *     { 
+ *         "donwloadUrl"     : String      // download Url
+ *     }
+ * OUT: status listening callback function
+ *      function declaration = function(event) 
+ *      
+ *      event object (JSON object)
+ *      {
+ *           "status"  : number  // 0: START, 1:PROGRESS, 2:COMPLETE, 3:FAIL
+ *      }
+ */
+LineApi.prototype.saveImageToAlbum = function(args, callback) {
+    Cordova.exec(callback, null, "LineApi", "saveImageToAlbum", [args]);
+};
+
+/*
+ * getLineEmojiMappingTable : Get Line Emoji Mapping Table (Key = Line Emoji Unicode, Value = Human Readable String)
+ *
+ * IN:
+ *     void
+ *
+ * OUT: 
+ *      function declaration = function(event) 
+ *      
+ *      event object (JSON object)
+ *      {
+ *           "emoji image index" : "human readble emoji"
+ *      }
+ */
+LineApi.prototype.getLineEmojiMappingTable = function(callback) {
+    Cordova.exec(callback, null, "LineApi", "getLineEmojiMappingTable", []);
+};
+ 
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+          
+    window.plugins.LineApi = new LineApi();
+});

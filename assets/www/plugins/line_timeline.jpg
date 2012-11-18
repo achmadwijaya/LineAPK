@@ -1,0 +1,51 @@
+/**
+ * Line Timeline plugin
+ * Author: snaiper
+ *
+ */
+ 
+var LineTimeLine = function() {
+};
+
+
+/*
+ * Show More Tab  
+ *     show line apps view (aka more tab)
+ *
+ * IN:
+ *     void
+ *
+ * OUT:
+ *     void
+ *
+ *
+ */
+LineTimeLine.prototype.showMoreTab = function() {
+    Cordova.exec(null, null, "LineTimeLine", "showMoreTab", []);
+};
+
+
+/*
+ * show Public settings
+ *      show timeline's public setting on settings view
+ *
+ * IN: 
+ *      void
+ *
+ * OUT:
+ *  void
+ *
+ *
+ */
+LineTimeLine.prototype.showPublicSettings = function() {
+    Cordova.exec(null, null, "LineTimeLine", "showPublicSettings", []);
+};
+
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+         
+    window.plugins.LineTimeLine = new LineTimeLine();
+});
+
+

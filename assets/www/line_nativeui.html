@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Line Friends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<meta charset="utf-8">
+<link rel="StyleSheet" type="text/css" href="style.css" />
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_nativeui.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_authentication.js"></script>
+
+<!--style>
+table           {width:100%; border:solid 1px red; table-layout:fixed;}
+table td        {border:solid 1px green;}
+.fixedcell      {width:75px;}
+.fluidcell      {width:auto; overflow:hidden; white-space:nowrap;}
+</style-->
+
+<script type="text/javascript" charset="utf-8">
+
+    var elementCount = 0;
+    var arrayCount = 0;
+    var objectCount = 0;
+    var nestingLevel = 0;
+    var returnOid;
+
+	function onBodyLoad()
+	{	
+	   document.addEventListener("deviceready", onDeviceReady, false);
+	   document.getElementById("showProfile").addEventListener("click", showProfile, false);
+	   document.getElementById("showMyProfile").addEventListener("click", showMyProfile, false);
+	   document.getElementById("showMap").addEventListener("click", showMap, false);
+	   document.getElementById("showDatePicker").addEventListener("click", showDatePicker, false);
+	   document.getElementById("changeProfile").addEventListener("click", changeProfile, false);
+	   document.getElementById("showErrorView").addEventListener("click", showErrorView, false);
+	   document.getElementById("showWriteView").addEventListener("click", showWriteView, false);
+	   document.getElementById("showVideoPlayer").addEventListener("click", showVideoPlayer, false);
+	}
+	
+	function showProfile() {
+        window.plugins.LineNativeUI.showProfile('u7c178a3ba553a08c894d223241fd7426');
+	}
+	
+	function showMyProfile() {
+			window.plugins.LineAuthentication.getSessionInfo(
+		                                             function(result) { window.plugins.LineNativeUI.showProfile(result.id); },
+	                                                 function(error)  {  });
+	
+	}
+	
+	
+	function showMap() {
+        window.plugins.LineNativeUI.openDetailMap({title:"NHN", address:"Bundang-gu, Seongnam-si, Gyeonggi-do, South Korea, NHN그린팩토리, 178-1 Jeongja-dong", latitude:37.359456, longitude:127.105315 });
+	}
+	
+	function showDatePicker() {
+        window.plugins.LineNativeUI.showDatePicker(callbackDatePicker, ["2012-03-05"]);
+	}
+	
+	function changeProfile() {
+        window.plugins.LineNativeUI.changeLineProfileImage(callbackChangeProfile);
+	}
+	
+	function callbackDatePicker(eventObject) {
+		if (eventObject != null) {
+			alert(eventObject);
+		}
+	}
+	
+	function callbackChangeProfile(eventObject) {
+		if (eventObject != null) {
+			alert("chnaged result : " + eventObject.status);
+		}
+	
+	}
+	
+	function showErrorView() {
+		window.plugins.LineNativeUI.showErrorView("http://m.naver.com");
+	}
+	
+	function showWriteView() {
+		window.plugins.LineNativeUI.showWriteView({
+	        	obsUrl     : "http://alpha.myhome.line.naver.jp/api/obs/key?sid=h",
+	     		postUrl   : "http://alpha.myhome.line.naver.jp/api/post.json",
+	     		maxAttach  : 1,
+	     		objectSpaceId : "h",
+	     		serviceName : "myhome"
+    		}, callbackWriteView);
+	}
+	
+	function callbackWriteView(eventObject) {
+		if (eventObject != null) {
+			alert(JSON.stringify(eventObject));
+			alert(eventObject.id[0]);
+			returnOid = eventObject.id[0];
+		}
+	
+	}
+	
+	function showVideoPlayer() {
+		window.plugins.LineNativeUI.showVideoPlayer({
+	     		objectSpaceId : "h",
+	     		serviceName : "myhome",
+	     		oid : "1133542779300039002"
+    		});
+	}
+	
+    function onDeviceReady()
+	{
+	}
+	
+    
+</script>
+
+</head>
+<body id="body" onload="onBodyLoad()">
+   <input type="button" id="showProfile" value="Show Profile (LINE 날씨친구)"/>
+   <input type="button" id="showMyProfile" value="Show My Profile"/>
+   <input type="button" id="showMap" value="Show Map (NHN 그린팩토리)"/>
+   <input type="button" id="showDatePicker" value="showDatePicker (2012-03-05)"/>
+   <input type="button" id="changeProfile" value="LINE 프로필 변경" />
+   <input type="button" id="showErrorView" value="에러페이지 보이기" />
+   <input type="button" id="showWriteView" value="마이홈 쓰기 페이지 보이기" />   
+   <input type="button" id="showVideoPlayer" value="마이홈에서 작성한 비디오 보기" />   
+   
+</body>
+</html>

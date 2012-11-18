@@ -1,0 +1,259 @@
+
+/**
+ * Line SocialGraph Instance plugin
+ * Author: snaiper
+ *
+ */
+  
+var SocialGraph = function() {
+};
+ 
+SocialGraph.SortType = {
+    ASC  : "asc",              
+    DESC : "desc"
+};
+ 
+/*
+ * [Friend Object Definition]
+ * {
+ *     "id"            : MID (String),
+ *     "displayName"   : Friend의 화면상에 표시되는 이름 (String),
+ *     "phoneticName"  : Friend의 로컬 연락처 이름 (String),
+ *     "statusMessage" : 상태 메시지 (String),
+ *     "pictureStatus" : 프로필 이미지의 timestamp (Number),
+ *     "pictureUrl"    : Picture URL (String),
+ *     "isFriend"      : 친구인지 여부 (0 / 1),
+ *     "blocking"      : 차단 여부,
+ *     "createdTime"   : 생성 시각, Unix timestamp (Number),
+ * }
+ *
+ * [Group Object Definition]
+ * {
+ *      "id"            : MID (String),
+ *      "name"          : Group 이름 (String),
+ *      "creator"       : Group의 생성자 이름 (Friend Object),
+ *      "createdTime"   : 생성 시각, Unix timestamp (Number),
+ *      "pictureStatus" : 프로필 이미지의 timestamp (Number),
+ *      "isAccepted"    : 그룹 초대 수락 여부 (Number),
+ *      "membersCount"  : 그룹 멤버 수 (Number),
+ *      "members"       : 그룹 멤버 정보 (Friend Object List, Array)
+ *      "inviteesCount" : 그룹 초대중인 친구 수 (Number)
+ *      "invitees"      : 그룹 초대중인 친구 (Friend Object List, Array)
+ *
+ *  }
+ */
+ 
+/*
+ * Get Total Line Friends Count 
+ *
+ * IN:
+ *  void 
+ *
+ * OUT:
+ *  Total Count of Current Line Friend List (Number)  
+ *
+ *
+ */
+SocialGraph.prototype.getTotalLineFriendListCount = function(success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getTotalLineFriendListCount", []);
+};
+ 
+/*
+ * Get Line Friends 
+ *
+ * IN:
+ *  Dictionary Type
+ *  
+ *  { 
+ *    sort    : string / desc:내림차순 asc:오름차순 default = asc
+ *    start   : number / 취득하는 index를 지정, default = 1
+ *    display : number / 돌려주는 항목수를 지정.max=50, default=10
+ *  }
+ *
+ * OUT:
+ *  {
+ *      "total"    : 총 친구의 수 (Number)
+ *      "start"    : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "display"  : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "contacts" : Friend Objects Array (Each friend is dictionary type) 
+ *                     [
+ *                         FriendObject, FriendObject, 
+ *                         ...
+ *                     ]
+ *  }
+ *
+ *
+ */
+SocialGraph.prototype.getLineFriendList = function(options, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineFriendList", [options]);
+};
+ 
+/*
+ * Get Line Friend from MID 
+ *
+ * IN:
+ *  arguments[0] => mid
+ *
+ * OUT:
+ *  Friend Object
+ *
+ */
+SocialGraph.prototype.getLineFriend = function(mid, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineFriend", [mid]);
+};
+ 
+/*
+ * Get Line Friends from MID Array
+ *
+ * IN:
+ *  arguments[0] => Frend's MID (Array)
+ *
+ * OUT:
+ *  Friend Objects Array (Each friend is dictionary type)
+ *  [
+ *     FriendObject, FriendObject, 
+ *     ...
+ *  ]
+ *
+ */
+SocialGraph.prototype.getLineFriendListFromMIDs = function(mids, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineFriendListFromMIDs", mids);
+};
+ 
+/*
+ * Search Line Friend from Name 
+ *
+ * IN:
+ *  arguments[0] => name
+ *
+ * OUT:
+ *  Friend Objects Array
+ *
+ */
+SocialGraph.prototype.searchLineFriend = function(name, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "searchLineFriend", [name]);
+};
+ 
+/*
+ * Get Line Groups List Count
+ *
+ * IN:
+ *  void
+ *
+ * OUT:
+ *  Total Count of Current Line Friend List (Number)  
+ */
+SocialGraph.prototype.getTotalLineGroupListCount = function(success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getTotalLineGroupListCount", []);
+};
+      
+/*
+ * Get Line Groups 
+ *
+ * IN:
+ *  Dictionary Type
+ *  
+ *  { 
+ *    sort    : string / desc:내림차순 asc:오름차순 default = asc
+ *    start   : number / 취득하는 index를 지정, default = 1
+ *    display : number / 돌려주는 항목수를 지정.max=50, default=10
+ *  }
+ *
+ * OUT:
+ *  {
+ *      "total"    : 총 그의 수 (Number)
+ *      "start"    : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "display"  : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "groups"   : Group Objects Array 
+ *                     [
+ *                         GroupObject, GroupObject,
+ *                         ...
+ *                     ]
+ *  }
+ *
+ *
+ */
+SocialGraph.prototype.getLineGroupList = function(options, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineGroupList", [options]);
+};
+ 
+/*
+ * Get Line Group from MID 
+ *
+ * IN:
+ *  arguments[0] => mid
+ *
+ * OUT:
+ *  Group Object 
+ *
+ */
+SocialGraph.prototype.getLineGroup = function(mid, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineGroup", [mid]);
+};
+ 
+/*
+ * Get Line Group Member from MID 
+ *
+ * IN:
+ *  Dictionary Type
+ *  
+ *  { 
+ *    mid     : string / group mid (required)
+ *    sort    : string / desc:내림차순 asc:오름차순 default = asc
+ *    start   : number / 취득하는 index를 지정, default = 1
+ *    display : number / 돌려주는 항목수를 지정.max=50, default=10
+ *  }
+ *
+ * OUT:
+ *  {
+ *      "total"    : 총 친구의 수 (Number)
+ *      "start"    : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "display"  : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "contacts" : Friend Objects Array (Each friend is dictionary type) 
+ *                     [
+ *                         FriendObject, FriendObject, 
+ *                         ...
+ *                     ]
+ *  }
+ *
+ */
+SocialGraph.prototype.getLineGroupMemberList = function(options, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineGroupMemberList", [options]);
+};
+ 
+/*
+ * Get Line Group Invitee(초대중인 친구들) from MID 
+ *
+ * IN:
+ *  Dictionary Type
+ *  
+ *  { 
+ *    mid     : string / group mid (required)
+ *    sort    : string / desc:내림차순 asc:오름차순 default = asc
+ *    start   : number / 취득하는 index를 지정, default = 1
+ *    display : number / 돌려주는 항목수를 지정.max=50, default=10
+ *  }
+ *
+ * OUT:
+ *  {
+ *      "total"    : 총 친구의 수 (Number)
+ *      "start"    : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "display"  : number / 인자로 넘어온 것들 그대로 전달 (Number)
+ *      "contacts" : Friend Objects Array (Each friend is dictionary type) 
+ *                     [
+ *                         FriendObject, FriendObject, 
+ *                         ...
+ *                     ]
+ *  }
+ *
+ */
+SocialGraph.prototype.getLineGroupInviteeList = function(options, success, fail) {
+    Cordova.exec(success, fail, "SocialGraph", "getLineGroupInviteeList", [options]);
+};
+ 
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+          
+    window.plugins.SocialGraph = new SocialGraph();
+});

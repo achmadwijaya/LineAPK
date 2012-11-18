@@ -1,0 +1,344 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Line Friends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<meta charset="utf-8">
+<link rel="StyleSheet" type="text/css" href="style.css" />
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_authentication.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_socialgraph.js"></script>
+
+<!--style>
+table           {width:100%; border:solid 1px red; table-layout:fixed;}
+table td        {border:solid 1px green;}
+.fixedcell      {width:75px;}
+.fluidcell      {width:auto; overflow:hidden; white-space:nowrap;}
+</style-->
+
+<script type="text/javascript" charset="utf-8">
+
+    var elementCount = 0;
+    var arrayCount = 0;
+    var objectCount = 0;
+    var nestingLevel = 0;
+
+	function onBodyLoad()
+	{	
+	   document.addEventListener("deviceready", onDeviceReady, false);
+	   document.getElementById("moreGroup").addEventListener("click", moreGroup, false);
+	}
+	
+	function setDeviceInfo()
+	{
+		var element = document.getElementById('DeviceInfo');
+		var info = "[language : " + LineDeviceInfo.language +"]";
+		info += "[timezone : " + LineDeviceInfo.timezone +"]";
+		info += "[hardwareModel : " + LineDeviceInfo.hardwareModel +"]";
+		info += "[appSDKVersion : " + LineDeviceInfo.appSDKVersion +"]";
+	    element.innerHTML = info;
+	}
+	
+	function setSessionInfo(result)
+	{
+		var element = document.getElementById('SessionInfo');
+	    element.innerHTML = result;
+	}
+	
+	function setAccessToken(result)
+	{
+		var element = document.getElementById('AccessToken');
+	    element.innerHTML = result;
+	}
+	
+	function setFriendsList(result)
+	{
+		var element = document.getElementById('FriendsList');
+	    element.innerHTML = result;
+	}
+	
+	function setFoundFriend(result)
+	{
+		var element = document.getElementById('FoundFriend');
+	    element.innerHTML = result;
+	}
+	
+	function setFoundFriendListFromMIDs(result) {
+		var element = document.getElementById('FoundFriends');
+	    element.innerHTML = result;
+	}
+
+    function setGroupList(result)
+	{
+		var element = document.getElementById('GroupList');
+	    element.innerHTML = result;
+	}
+	
+	function setFoundGroup(result)
+	{
+		var element = document.getElementById('FoundGroup');
+	    element.innerHTML = result;
+	}
+	
+	function setFoundGroupMember(result)
+	{
+		var element = document.getElementById('FoundGroupMember');
+	    element.innerHTML = result;
+	}
+	
+	function setSearchResult(result)
+	{
+		var element = document.getElementById('SearchedFriend');
+	    element.innerHTML = result;
+	}
+	
+	function initList()
+	{
+		setFriendsList("<div>No Results</div>");
+	    setGroupList("<div>No Results</div>");
+	}
+	
+	var testGroupId;
+	var testFriendName;
+	
+	function requestList()
+	{
+		window.plugins.LineAuthentication.getSessionInfo(
+		                                             function(result) { setSessionInfo(parse(result)); },
+	                                                 function(error)  { setSessionInfo("<div>Error Occured.</div>"); });
+	    
+	    window.plugins.LineAuthentication.getAccessToken(
+	    										'5',
+	                                            function(result) { setAccessToken(result); },
+	                                            function(error)  { setAccessToken("<div>Error Occured.</div>"); });
+	
+		window.plugins.SocialGraph.getTotalLineFriendListCount(
+			function(result) { 
+				document.getElementById("FriendsListCount").innerText = "Total Friends Count: " + result; 
+			},
+            function(error)  { alert(error); }
+        );
+                                                               
+		window.plugins.SocialGraph.getLineFriendList({ sortType : SocialGraph.SortType.ASC, start:1, display:50 }, 
+	                                                 function(result) { 
+	                                                 	testFriendName = result.contacts[0].displayName; 
+	                                                 	setFriendsList(parse(result)); 
+	                                                 },
+	                                                 function(error)  { setFriendsList("<div>Error Occured.</div>"); });
+	    
+	    window.plugins.SocialGraph.getLineFriend('u7c178a3ba553a08c894d223241fd7426', 
+	                                            function(result) { setFoundFriend(parse(result)); },
+	    
+	                                            function(error)  { setFoundFriend("<div>Error Occured.</div>"); });
+	    
+	   window.plugins.SocialGraph.getLineFriendListFromMIDs(['u7c178a3ba553a08c894d223241fd7426', 'u631d02bee66446f240bc0c8ddf7012d6'],
+                                                             function(result) { setFoundFriendListFromMIDs(parse(result)); },
+                                                             function(error)  { setFoundFriendListFromMIDs("<div>Error Occured.</div>"); });
+                                                                                                     
+	    window.plugins.SocialGraph.getTotalLineGroupListCount(
+	    	function(result) { 
+	    		document.getElementById("GroupListCount").innerText = "Total Groups Count: " + result; 
+	    	},
+            function(error)  { alert(error); }
+        );
+                                                                                                           
+	    window.plugins.SocialGraph.getLineGroupList({ sortType : SocialGraph.SortType.ASC, start:1, display:50}, 
+	                                                function(result) {
+	                                                	testGroupId = result.groups[0].id; 
+	                                                	setGroupList(parse(result)); 
+	                                                },
+	                                                function(error)  { setGroupList("<div>Error Occured.</div>"); });
+
+// group list에서 가져온 값을 가지고 조회해야 결과를 구할 수 있기 때문에 바로 실행하지 않는다.	                                                
+//	    window.plugins.SocialGraph.getLineGroup('c377bf0b5b12073186fb305ad8d209291',
+//	                                            function(result) { setFoundGroup(parse(result)); },
+//	                                            function(error)  { setFoundGroup("<div>Error Occured.</div>"); });
+//	                                            
+//	    window.plugins.SocialGraph.getLineGroupMemberList({ id:"c377bf0b5b12073186fb305ad8d209291", sortType : SocialGraph.SortType.ASC, start:1, display:50 },
+//	                                            function(result) { setFoundGroupMember(parse(result)); },
+//	                                            function(error)  { setFoundGroupMember("<div>Error Occured.</div>"); });
+	}
+	
+	function moreGroup() {
+		alert("testGroupId=" + testGroupId + "\t testFriendName=" + testFriendName);
+		window.plugins.SocialGraph.getLineGroup(testGroupId,
+	                                            function(result) {
+	                                            	setFoundGroup(parse(result)); 
+	                                            },
+	                                            function(error)  { setFoundGroup("<div>Error Occured.</div>"); });
+	                                            
+	    window.plugins.SocialGraph.getLineGroupMemberList({ id:testGroupId, sortType : SocialGraph.SortType.ASC, start:1, display:50 },
+	                                            function(result) { setFoundGroupMember(parse(result)); },
+	                                            function(error)  { setFoundGroupMember("<div>Error Occured.</div>"); });
+		window.plugins.SocialGraph.searchLineFriend({name:testFriendName, bot:false},
+	                                            function(result) { setSearchResult(parse(result)); },
+	                                            function(error)  { setSearchResult("<div>Error Occured.</div>"); });	                                            
+	}
+	
+    function onDeviceReady()
+	{
+		setDeviceInfo();
+		requestList();
+		initList();
+	}
+	
+	function wordwrap(str)
+	{
+	   parts = str.split(" ");
+	
+	   for(i = 0; i < parts.length; i++)
+	   {
+		  if(parts[i].length <= 5) continue;
+	
+		  t = parts[i].length;
+		  p = "";
+	
+		  for(var j = 0; j < (parts[i].length - 5); j += 5) p += parts[i].substring(j, j + 5) + "<wbr />";
+		  parts[i] = p + parts[i].substring(j, parts[i].length);
+	   }
+	
+	   return parts.join(" ");
+	}
+    
+    function parseValue(val, parent, level)
+	{
+	   elementCount++;
+	   if(parent == null) parent = "";
+	   if(level == null) level = 1;
+	
+	   if(typeof(val) == "object")
+	   {
+		  if(level > nestingLevel) nestingLevel = level;
+		  if(val instanceof Array)
+		  {
+			 arrayCount++;
+			 parent = parent + (parent != "" ? " > " : "") + "Array (" + val.length + " item" + (val.length != 1 ? "s)" : ")");
+	
+			 var out = "<div class='wrap'>\n<div class='array'>\n<div class='widgets'></div>\n<h3><span class='titled' title='" + parent + "'>Array</span></h3>\n";
+	
+			 if(val.length > 0)
+			 {
+				out += "<table class='arraytable'>\n<tr><th>Idx</th><th>Val</th></tr>\n";
+				
+				for(prop in val)
+				{
+				   if(typeof(val[prop]) == "function") continue;
+				   out += "<tr><td>" + prop + "</td><td>" + parseValue(val[prop], parent, level + 1) + "</td></tr>\n";
+				}
+				
+				out += "</table>\n";
+			 }
+			 else
+			 {
+				
+				return "(empty <span class='titled' title='" + parent + "'>Array</span>)\n";
+			 }
+			 
+			 out += "</div>\n</div>\n";
+			 return out;
+		  }
+		  else
+		  {
+			 objectCount++;
+			 i = 0;
+			 for(prop in val)
+			 {
+				if(typeof(val[prop]) != "function") i++;
+			 }
+	
+			 parent = parent + (parent != "" ? " > " : "") + "Object (" + i + " item" + (i != 1 ? "s)" : ")");
+	
+			 var out = "<div class='wrap'>\n<div class='object'>\n<div class='widgets'></div>\n<h3><span class='titled' title='" + parent + "'>Object</span></h3>\n";
+			 
+			 if(i > 0)
+			 {
+				out += "<table class='objecttable'>\n<tr><th>Name</th><th>Value</th></tr>\n";
+				for(prop in val)
+				{
+				   if(typeof(val[prop]) == "function") continue;
+				   out += "<tr><td>" + prop + "</td><td>" + parseValue(val[prop], parent, level + 1) + "</td></tr>\n";
+				}
+				
+				out += "</table><div class='clear'></div>\n";
+			 }
+			 else
+			 {
+				return "(empty <span class='titled' title='" + parent + "'>Object</span>)\n";
+			 }
+			 
+			 out += "</div>\n</div>\n";
+			 return out;
+		  }
+	   }
+	   else
+	   {
+		  if(typeof(val) == "string") return "<span class='string'>" + wordwrap(val.replace(/\n/g, "<br />")) + "</span>";
+		  else if(typeof(val) == "number") return "<span class='number'>" + val + "</span>";
+		  else if(typeof(val) == "boolean") return "<span class='boolean'>" + val + "</span>";
+		  else return "<span class='void'>(null)</span>";
+	   }
+	}
+    
+    function parse(str)
+    {
+	   elementCount = 0;
+	   arrayCount = 0;
+	   objectCount = 0;
+
+	   var obj = null;
+	   try
+	   {
+	      // alert(str);
+		  obj = typeof str != 'object' ? JSON.parse(str) : str;
+		  //alert(obj);
+	   }
+	   catch(e)
+	   {
+		  if(e instanceof SyntaxError)
+		  {
+			 alert("There was a syntax error in your JSON string.\n" + e.message + "\nPlease check your syntax and try again.");
+			 return;
+		  }
+	
+	      alert(e);
+		  alert("There was an unknown error. Perhaps the JSON string contained a deep level of nesting.");
+		  return;
+	   }
+	
+	   return parseValue(obj, null, null);
+    }
+    
+</script>
+
+</head>
+<body id="body" onload="onBodyLoad()">
+   <input type="button" id="moreGroup" value="Group Test"/>
+   <div data-role="page">
+      <div data-role="content">
+         <p>Line DeviceInfo</p>
+         <p id="DeviceInfo">Loading LineDeviceInfo...</p>
+         <p>Line SessionInfo</p>
+         <p id="SessionInfo">Loading Session...</p>
+         <p>Avatar ChannelToken Info</p>
+         <p id="AccessToken">Loading AccessToken...</p>
+         <p>Line Friends</p>
+         <p id="FriendsListCount"></p>
+         <p id="FriendsList">Loading Friends...</p>
+         <p>lineweatherkr Info</p>
+         <p id="FoundFriend">Loading Friend Info of lineweatherkr...</p>
+         <p>Friends Info</p>
+         <p id="FoundFriends">Loading Friends Info...</p>
+         <p>Line Groups</p>
+         <p id="GroupListCount"></p>
+         <p id="GroupList">Loading Group...</p>
+         <p>group test Info</p>
+         <p id="FoundGroup">Loading Group Info of test...</p>
+         <p>group test member info</p>
+         <p id="FoundGroupMember">Loading Group member info of test...</p>
+         <p>ᅟᅧSearch Friends</p>
+         <p id="SearchedFriend">Loading Searched Friends...</p>
+      </div>
+   </div>
+   <div><a href="line_httprequest.html">Http request Test</a>
+</body>
+</html>

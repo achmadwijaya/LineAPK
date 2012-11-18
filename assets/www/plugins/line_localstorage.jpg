@@ -1,0 +1,222 @@
+/**
+ * Line LocalStorage Instance plugin
+ * Author: snaiper
+ *
+ */
+  
+var LineLocalStorage = function() {
+};
+  
+LineLocalStorage.Result = {
+    FAIL            : 0,
+    SUCCESS         : 1,
+    CANTOPENSTORAGE : 2, 
+};
+  
+/*
+ * Get Keys From LocalStorage
+ *
+ * IN:
+ *      void 
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result" : 1 = success, 0 = fail (Number)
+ *           "data"   : keys array (Array)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.keys = function(result) {
+    Cordova.exec(result, null, "LineLocalStorage", "keys", []);
+};
+ 
+/*
+ * Set Value by Key to LocalStorage
+ *
+ * IN:
+ *     arguments[0] => key (String),
+ *     arguemnts[1] => value (String)
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result"   : 1 = success, 0 = fail (Number)
+ *           "message"  : result description (String)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.setItem = function(key, value, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "setItems", [[{"key": key, "value" : value}]]);
+};
+ 
+/*
+ * Set Values by Key to LocalStorage
+ *
+ * IN:
+ *     arguments[0] (Array)
+ *     [
+ *         { 
+ *            "key"     : key name string(String),      
+ *            "value"   : value string(String), 
+ *         }, 
+ *          ...
+ *     ]
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result"   : 1 = success, 0 = fail (Number)
+ *           "message"  : result description (String)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.setItems = function(args, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "setItems", [args]);
+};
+ 
+/*
+ * Get Value by Key from LocalStorage
+ *
+ * IN:
+ *      arguments[0] => key   
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result" : 1 = success, 0 = fail (Number)
+ *           "data"   : data array (Array)
+ *                     [
+ *                        { 
+ *                           "key"     : key name string(String),      
+ *                           "value"   : value string(String), 
+ *                        }, 
+ *                     ] 
+ *      }
+ *
+ */
+LineLocalStorage.prototype.getItem = function(key, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "getItems", [[key]]);
+};
+ 
+/*
+ * Get Values by Key from LocalStorage
+ *
+ * IN:
+ *      arguments[0] => keys   (Array)
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result" : 1 = success, 0 = fail (Number)
+ *           "data"   : data array 
+ *                     [
+ *                        { 
+ *                           "key"     : key name string(String),      
+ *                           "value"   : value string(String), 
+ *                        }, 
+ *                        ...
+ *                     ] 
+ *      }
+ *
+ */
+LineLocalStorage.prototype.getItems = function(keys, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "getItems", [keys]);
+};
+ 
+/*
+ * Remove Key-Values by Key from LocalStorage
+ *
+ * IN:
+ *      arguments[0] => key   (String)
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result" : 1 = success, 0 = fail (Number)
+ *           "message"  : result description (String)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.removeItem = function(key, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "removeItems", [[key]]);
+};
+ 
+/*
+ * Remove Key-Values by Key from LocalStorage
+ *
+ * IN:
+ *      arguments[0] => keys   (Array)
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result" : 1 = success, 0 = fail (Number)
+ *           "message"  : result description (String)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.removeItems = function(keys, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "removeItems", [keys]);
+};
+ 
+/*
+ * Check existence for Key from LocalStorage
+ *
+ * IN:
+ *      arguments[0] => key    (String) 
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result" : 1 = success, 0 = fail (Number)
+ *           "exist"  : true / false (boolean)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.existsItem = function(key, result) {
+    Cordova.exec(result, null, "LineLocalStorage", "existsItem", [key]);
+};
+ 
+/*
+ * Clear All Key-Values from LocalStorage
+ *
+ * IN:
+ *      void
+ *
+ * OUT: result function
+ *      function declaration = function(result) 
+ *      
+ *      result object (JSON object)
+ *      {
+ *           "result"   : 1 = success, 0 = fail (Number)
+ *           "message"  : result description (String)
+ *      }
+ *
+ */
+LineLocalStorage.prototype.clearItems = function(result) {
+    Cordova.exec(result, null, "LineLocalStorage", "clearItems", []);
+};
+ 
+Cordova.addConstructor(function() {
+    if (!window.plugins)
+         window.plugins = {};
+           
+    window.plugins.LineLocalStorage = new LineLocalStorage();
+});

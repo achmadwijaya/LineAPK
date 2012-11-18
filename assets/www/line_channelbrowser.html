@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Line Friends</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+<meta charset="utf-8">
+<link rel="StyleSheet" type="text/css" href="style.css" />
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="content://jp.naver.line.android/line_channelbrowser.js"></script>
+
+<!--style>
+table           {width:100%; border:solid 1px red; table-layout:fixed;}
+table td        {border:solid 1px green;}
+.fixedcell      {width:75px;}
+.fluidcell      {width:auto; overflow:hidden; white-space:nowrap;}
+</style-->
+
+<script type="text/javascript" charset="utf-8">
+
+    var elementCount = 0;
+    var arrayCount = 0;
+    var objectCount = 0;
+    var nestingLevel = 0;
+
+	function onBodyLoad()
+	{	
+	   document.addEventListener("deviceready", onDeviceReady, false);
+	   document.getElementById("openWebPage").addEventListener("click", openWebPage, false);
+	   document.getElementById("openWebPageP").addEventListener("click", openWebPageP, false);
+	   document.getElementById("openWebPageLL").addEventListener("click", openWebPageLL, false);
+	   document.getElementById("openWebPageLR").addEventListener("click", openWebPageLR, false);
+	   document.getElementById("closeWebPage").addEventListener("click", closeWebPage, false);
+	   document.getElementById("showStatusBar").addEventListener("click", showStatusBar, false);
+	   document.getElementById("hideStatusBar").addEventListener("click", hideStatusBar, false);
+	   document.getElementById("watchShaking").addEventListener("click", watchShaking, false);
+	   document.getElementById("unwatchShaking").addEventListener("click", unwatchShaking, false);
+	   document.getElementById("rotateLand").addEventListener("click", rotateLand, false);
+	   document.getElementById("rotatePort").addEventListener("click", rotatePort, false);
+	   document.getElementById("setBrowserSize").addEventListener("click", setBrowserSize, false);
+	   document.getElementById("watchSizeChanged").addEventListener("click", watchSizeChanged, false);
+	   document.getElementById("unwatchSizeChanged").addEventListener("click", unwatchSizeChanged, false);
+	   
+
+	}
+	za
+	function openWebPage() {
+        window.plugins.ChannelBrowser.openWebPage({
+    			appear : ChannelBrowser.ViewAppearType.PUSH,
+    			statusbar :  ChannelBrowser.StatusBar.HIDE,
+    			url    : 'http://61.247.207.202/naver/LINE/channel/android/app_install.html'
+		});
+	}
+	
+	function openWebPageP() {
+        window.plugins.ChannelBrowser.openWebPage({
+    			orient : ChannelBrowser.OrientationType.PORTRAIT_UP, 
+    			url    : 'http://m.naver.com'
+		});
+	}
+	function openWebPageLL() {
+        window.plugins.ChannelBrowser.openWebPage({
+    			orient : ChannelBrowser.OrientationType.LANDSCAPE_LEFT, 
+    			url    : 'http://m.naver.com'
+		});
+	}
+	function openWebPageLR() {
+        window.plugins.ChannelBrowser.openWebPage({
+    			orient : ChannelBrowser.OrientationType.LANDSCAPE_RIGHT, 
+    			url    : 'http://m.naver.com'
+		});
+	}
+	
+	function closeWebPage() {
+        window.plugins.ChannelBrowser.closeWebPage();
+	}
+	
+	function showStatusBar() {
+        window.plugins.ChannelBrowser.showStatusBar();
+	}
+
+	function hideStatusBar() {
+        window.plugins.ChannelBrowser.hideStatusBar();
+	}
+
+	function watchShaking() {
+		alert("watchShaking");
+        window.plugins.ChannelBrowser.watchShaking(callback);
+	}
+
+	function unwatchShaking() {
+        window.plugins.ChannelBrowser.unwatchShaking();
+	}
+	
+	function rotateLand() {
+                window.plugins.ChannelBrowser.rotateBrowser({
+    			orient : ChannelBrowser.OrientationType.LANDSCAPE_LEFT
+		});
+	}
+
+	function rotatePort() {
+                window.plugins.ChannelBrowser.rotateBrowser({
+    			orient : ChannelBrowser.OrientationType.PORTRAIT_UP
+		});
+	}
+	
+	function setBrowserSize() {
+                window.plugins.ChannelBrowser.setBrowserSize({
+    			width : 320, height : 320 });
+	}
+	
+
+
+	function callback() {
+		alert("shaking");
+	}
+
+	function watchSizeChanged() {
+		alert("watchSizeChanged");
+        window.plugins.ChannelBrowser.watchSizeChanged(sizeChangedCallback);
+	}
+
+	function unwatchSizeChanged() {
+        window.plugins.ChannelBrowser.unwatchSizeChanged();
+	}
+	
+	function sizeChangedCallback(event) {
+		var element = document.getElementById('SizeChangedInfo');
+		var info = "[width : " + event.width +"]";
+		info += "[height : " + event.height +"]";
+	    element.innerHTML = info;
+	}
+
+	
+    function onDeviceReady()
+	{
+	}
+	
+    
+</script>
+
+</head>
+<body id="body" onload="onBodyLoad()">
+   <input type="button" id="openWebPage" value="모바일 네이버 페이지 열기"/>
+   <input type="button" id="openWebPageP" value="모바일 네이버 페이지 열기(PORTRAIT)"/>
+   <input type="button" id="openWebPageLL" value="모바일 네이버 페이지 열기(LANDSCAPE LEFT)"/>
+   <input type="button" id="openWebPageLR" value="모바일 네이버 페이지 열기(LANDSCAPE RIGHT)"/>
+   <input type="button" id="rotateLand" value="가로모드로..."/>
+   <input type="button" id="rotatePort" value="세모모드로..."/>
+   <input type="button" id="closeWebPage" value="페이지 닫기"/>
+   <input type="button" id="showStatusBar" value="노티바 보이기"/>
+   <input type="button" id="hideStatusBar" value="노티바 감추기"/>
+   <input type="button" id="watchShaking" value="흔들기 감지"/>
+   <input type="button" id="unwatchShaking" value="흔들기 감지 해제"/>
+   <input type="button" id="setBrowserSize" value="브라우저 사이즈 설정(320x320)"/>
+   <input type="button" id="watchSizeChanged" value="사이즈 변경 감지"/>
+   <input type="button" id="unwatchSizeChanged" value="사이즈 변경 해제"/>
+   <p id="SizeChangedInfo"></p>
+</body>
+</html>
